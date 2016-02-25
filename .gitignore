@@ -1,12 +1,32 @@
-*.class
+# IntelliJ IDEA #
+/.idea
+/*.iml
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Vagrant
+/.vagrant
+
+# Ignore eclipse project files #
+.classpath
+.settings
+.project
+
+# Ignore byte code
+*.class
 
 # Package Files #
 *.jar
 *.war
 *.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Ignore Output folder #
+/target
+/logs
+
+# Ignore dependency reduced POM #
+dependency-reduced-pom.xml
+
+# Individual developer configuration files
+*.yml
+*.yaml
+
+run.sh
