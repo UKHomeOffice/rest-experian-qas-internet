@@ -1,0 +1,64 @@
+---
+username: xxxx
+password: xxxx
+country: xxxx
+layout: xxxx
+
+# Identification for lines in the layout (used for mapping into address objects)
+townLabel: xxxx
+postcodeLabel: xxxx
+uprnLabel: xxxx
+eastingLabel: xxxx
+northingLabel: xxxx
+dependentLocalityLabel: xxxx
+administrativeAreaLabel: xxxx
+ignoreLabels: xxxx
+
+swagger:
+  resourcePackage: uk.gov.hmpo.passport.renewal.address.services.resources
+
+metrics:
+  reporters:
+    - type: graphite
+      host: graphite.xxx.xxx.xxx
+      port: 2003
+      prefix: dev.rest-experian-qas-internet
+
+server:
+  applicationConnectors:
+    - type: http
+      port: xxxx
+  adminConnectors:
+    - type: http
+      port: xxxx
+
+# Logging settings.
+logging:
+
+  # Permit DEBUG, INFO, WARN and ERROR messages to be logged by appenders.
+  level: DEBUG
+
+  appenders:
+    # Log warnings and errors to stderr
+    - type: console
+      threshold: INFO
+      target: stderr
+
+    # Log info, warnings and errors to our apps' main log.
+    # Rolled over daily and retained for 5 days.
+    - type: file
+      threshold: INFO
+      currentLogFilename: ./logs/rest-experian-qas-internet.log
+      archivedLogFilenamePattern: ./logs/rest-experian-qas-internet-%d.log.gz
+      archivedFileCount: 5
+
+    # Log debug messages, info, warnings and errors to our apps' debug log.
+    # Rolled over hourly and retained for 6 hours
+    - type: file
+      threshold: DEBUG
+      currentLogFilename: ./logs/rest-experian-qas-internet-debug.log
+      archivedLogFilenamePattern: ./logs/rest-experian-qas-internet-%d{yyyy-MM-dd-hh}.log.gz
+      archivedFileCount: 6
+      archivedFileCount: 6
+
+mode: PROD

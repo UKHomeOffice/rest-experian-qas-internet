@@ -1,0 +1,44 @@
+The deploy.sh script will deploy the wcrs-address application. The following
+environment variables must be set in the shell of the user who owns this
+process:
+
+WCRS_ADDRESS_JAVA_HOME   <= java home
+WCRS_ADDRESS_HOME        <= base destination dir for deploy
+WCRS_ADDRESS_SOURCE      <= location of files to be deployed
+WCRS_ADDRESS_PORT        <= port to run the wcrs-address on
+WCRS_ADDRESS_ADMIN_PORT  <= port to run the wcrs-address admin on
+WCRS_ADDRESS_USER        <= licensed user name
+WCRS_ADDRESS_PASSWORD    <= licensed user password
+
+
+##### Add to ~/.bash_profile and the beginning of ~/.bashrc #####
+if [ -f ~/.bash_wcrs-address_config ]; then
+  . ~/.bash_wcrs-address_config
+fi
+
+##### Secure the file #####
+chmod 600 ~/.bash_wcrs-address_config
+
+##### Example content of ~/.bash_wcrs-address_config #####
+## Local configuration settings for the dropwizard application.
+## This file should not be readable by any other users.
+export WCRS_ADDRESS_JAVA_HOME="/path/to/java"
+export WCRS_ADDRESS_HOME="/path/to/wcrs-address"
+export WCRS_ADDRESS_SOURCE="/path/to/jenkins/jobs/waste-exemplar-address-lookup/workspace or codedrop/"
+export WCRS_ADDRESS_PORT=9190
+export WCRS_ADDRESS_ADMIN_PORT=9191
+export WCRS_ADDRESS_USER="username"
+export WCRS_ADDRESS_PASSWORD="password"
+
+
+The deploy script will also tag the deployed directory with the jenkins build
+number if you add the following post-step shell command to the jenkis job:
+##### jenkins commands #####
+## Make a record of the jenkins build number.
+JENKINS_BUILD_NUMBER=`ls -l /caci/jenkins/jobs/waste-exemplar-address-lookup/builds | grep ^l | grep -v last | awk '{print $9}' | sort -n | tail -1`
+echo "j${JENKINS_BUILD_NUMBER}" > /caci/jenkins/jobs/waste-exemplar-address-lookup/workspace/jenkins_build_number
+
+
+An init.d script is available under bin/init.d/ubuntu/
+
+
