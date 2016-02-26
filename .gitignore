@@ -30,3 +30,6 @@ dependency-reduced-pom.xml
 *.yaml
 
 run.sh
+
+# Jenkins deploy
+/bin
