@@ -27,6 +27,9 @@ spec:
             memory: 1Gi
             cpu: 250m
         imagePullPolicy: Always
+        env:
+        - name: JAVA_OPTS
+          value: '-Xmx1G'
       - name: tls
         image: quay.io/ukhomeofficedigital/nginx-proxy:v1.7.0
         imagePullPolicy: Always
