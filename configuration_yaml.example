@@ -27,10 +27,10 @@ metrics:
 server:
   applicationConnectors:
     - type: http
-      port: xxxx
+      port: 8080
   adminConnectors:
     - type: http
-      port: xxxx
+      port: 8081
 
 # Logging settings.
 logging:
