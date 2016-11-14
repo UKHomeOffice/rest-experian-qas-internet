@@ -6,7 +6,7 @@ pipeline:
 
   build:
     commands:
-       - mvn clean install
+       - mvn clean install -Dmaven.repo.local=.m2
     image: "quay.io/ukhomeofficedigital/java8-mvn:v3.3.9"
     when:
       event:
