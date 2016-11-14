@@ -1,0 +1,90 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: rest-experian-qas-internet
+  name: rest-experian-qas-internet
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      name: rest-experian-qas-internet
+  template:
+    metadata:
+      labels:
+        name: rest-experian-qas-internet
+        app: rest-experian-qas-internet
+    spec:
+      containers:
+      - name: rest-experian-qas-internet
+        image: quay.io/ukhomeofficedigital/rest-experian-qas-internet:{{.DRONE_COMMIT_SHA}}
+        imagePullPolicy: Always
+      - name: tls
+        image: quay.io/ukhomeofficedigital/nginx-proxy:v1.7.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443
+        - containerPort: 80
+        env:
+        - name: PROXY_SERVICE_HOST
+          value: 127.0.0.1
+        - name: PROXY_SERVICE_PORT
+          value: "8080"
+        - name: ENABLE_UUID_PARAM
+          value: "FALSE"
+        - name: NAXSI_USE_DEFAULT_RULES
+          value: "FALSE"
+        - name: ERROR_REDIRECT_CODES
+          value: "599"
+        - name: ADD_NGINX_SERVER_CFG
+          value: |
+            add_header Cache-Control private;
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header X-Content-Type-Options "nosniff" always;
+            add_header X-XSS-Protection "1; mode=block" always;
+        - name: SERVER_CERT
+          value: /etc/secrets/tls-bundle.pem
+        - name: SERVER_KEY
+          value: /etc/secrets/tls-key.pem
+        volumeMounts:
+          - name: certs
+            mountPath: /etc/secrets
+            readOnly: true
+      - name: vault-side-kick
+        image: quay.io/ukhomeofficedigital/vault-sidekick-jks:v0.2.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: 100m
+          requests:
+            memory: "50Mi"
+            cpu: 100m
+        args:
+          - -output=/etc/secrets
+          - -tls-skip-verify=true
+          - -cn=pki:services/$NAMESPACE/pki/issue/default:common_name=rest-experian-qas-internet.${NAMESPACE}.svc.cluster.local,file=/etc/keystore/tls,fmt=bundle
+        env:
+          - name: VAULT_ADDR
+            value: "https://vault.vault.svc.cluster.local:8200"
+          - name: VAULT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: store-token
+                key: token
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        volumeMounts:
+          - mountPath: /etc/keystore
+            name: certs
+      volumes:
+        - name: certs
+          emptyDir: {}
+      imagePullSecrets:
+      - name: registrykey

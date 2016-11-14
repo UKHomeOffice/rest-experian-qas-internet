@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/secure-backends: "true"
+  name: rest-experian-qas-internet
+spec:
+  rules:
+  - host: rest-experian-qas-internet-{{.DRONE_DEPLOY_TO}}.notprod.homeoffice.gov.uk
+    http:
+      paths:
+      - backend:
+          serviceName: rest-experian-qas-internet
+          servicePort: 443
+        path: /
+  - host: www.rest-experian-qas-internet-{{.DRONE_DEPLOY_TO}}.notprod.homeoffice.gov.uk
+    http:
+      paths:
+      - backend:
+          serviceName: rest-experian-qas-internet
+          servicePort: 443
+        path: /
+  tls:
+  - hosts:
+    - rest-experian-qas-internet-{{.DRONE_DEPLOY_TO}}.notprod.homeoffice.gov.uk
+    - www.rest-experian-qas-internet-{{.DRONE_DEPLOY_TO}}.notprod.homeoffice.gov.uk
+    secretName: letsencrypt-tls-rest-experian-qas-internet
