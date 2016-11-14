@@ -7,8 +7,6 @@ pipeline:
   build:
     commands:
        - mvn clean install
-    environment:
-       - BUILD_NUMBER=${DRONE_BUILD_NUMBER}
     image: "quay.io/ukhomeofficedigital/java8-mvn:v3.3.9"
     when:
       event:
@@ -22,7 +20,7 @@ pipeline:
 
   build_image:
     commands:
-      - "docker build --label ${DRONE_BUILD_NUMBER} --build-arg BUILD_NUMBER=${DRONE_BUILD_NUMBER} -t rest-experian-qas-internet ."
+      - "docker build -t rest-experian-qas-internet ."
     environment:
       - "DOCKER_HOST=tcp://127.0.0.1:2375"
     image: docker:1.11
