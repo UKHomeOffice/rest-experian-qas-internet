@@ -24,7 +24,7 @@ spec:
         image: quay.io/ukhomeofficedigital/rest-experian-qas-internet:{{.DRONE_COMMIT_SHA}}
         resources:
           limits:
-            memory: 256Mi
+            memory: 1Gi
             cpu: 250m
         imagePullPolicy: Always
       - name: tls
@@ -90,5 +90,3 @@ spec:
       volumes:
         - name: certs
           emptyDir: {}
-      imagePullSecrets:
-      - name: registrykey
