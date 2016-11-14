@@ -61,4 +61,4 @@ logging:
       archivedFileCount: 6
       archivedFileCount: 6
 
-mode: PROD
+mode: DEV
