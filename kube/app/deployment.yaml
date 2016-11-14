@@ -22,6 +22,10 @@ spec:
       containers:
       - name: rest-experian-qas-internet
         image: quay.io/ukhomeofficedigital/rest-experian-qas-internet:{{.DRONE_COMMIT_SHA}}
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 250m
         imagePullPolicy: Always
       - name: tls
         image: quay.io/ukhomeofficedigital/nginx-proxy:v1.7.0
